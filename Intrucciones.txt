@@ -1,0 +1,25 @@
+# Flask
+cd flask-app
+docker build -t revkelo/flask-app:latest .
+
+# Node
+cd ../node-app
+docker build -t revkelo/node-app:latest .
+
+
+docker push revkelo/flask-app:latest
+docker push revkelo/node-app:latest
+
+
+minikube start
+minikube addons enable metrics-server
+
+
+kubectl get all
+kubectl get hpa
+kubectl describe hpa flask-hpa
+
+
+winget install Kubernetes.minikube
+
+ usaremos minikube
