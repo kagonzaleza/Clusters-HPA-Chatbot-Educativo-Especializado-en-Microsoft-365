@@ -1,25 +1,57 @@
-# Flask
-cd flask-app
-docker build -t revkelo/flask-app:latest .
+abrir Docker desktop
+Habilitar Kubernetes
 
-# Node
-cd ../node-app
-docker build -t revkelo/node-app:latest .
+Cambiar "su-usuario" por el usuario de docker iniciar sesion el caso
 
-
-docker push revkelo/flask-app:latest
-docker push revkelo/node-app:latest
+cd back
+docker build -t su-usuario/clustershpachatboteducativoespecializadoenmicrosoft365-backend:latest .
+docker push su-usuario/clustershpachatboteducativoespecializadoenmicrosoft365-backend:latest
 
 
+cd front
+docker build -t su-usuario/clustershpachatboteducativoespecializadoenmicrosoft365-frontend:latest .
+docker push su-usuario/clustershpachatboteducativoespecializadoenmicrosoft365-frontend:latest
+
+
+# Configuración de Minikube
+
+## Instalar Minikube (si no está instalado)
+winget install Kubernetes.minikube
+
+## Iniciar Minikube
 minikube start
+
+## Habilitar metrics-server para el autoscaler (HPA)
 minikube addons enable metrics-server
 
 
-kubectl get all
-kubectl get hpa
-kubectl describe hpa flask-hpa
+cd back/k8s
+kubectl apply -f .
+
+cd front/k8s
+kubectl apply -f .
 
 
-winget install Kubernetes.minikube
+kubectl get services
 
- usaremos minikube
+ejemplo:
+PS D:\Clusters HPA Chatbot Educativo Especializado en Microsoft 365> kubectl get services
+NAME               TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+backend-service    NodePort       10.96.210.105    <none>        80:32133/TCP   4m15s
+frontend-service   NodePort       10.99.93.128     <none>        80:30441/TCP   76s
+
+
+kubectl port-forward service/backend-service 30001:80
+
+minikube service frontend-service
+
+
+probrar el hpa 
+
+while ($true) { Invoke-WebRequest http://127.0.0.1:61095 -UseBasicParsing }
+
+while ($true) {
+    kubectl get pods -l app=frontend
+    Start-Sleep -Seconds 2
+    Clear-Host
+}
